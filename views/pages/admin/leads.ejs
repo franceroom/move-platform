@@ -1,0 +1,22 @@
+<%- include("../../partials/head", { title: "Candidatures propriétaires" }) %>
+<section class="admin-page">
+  <nav class="admin-nav"><a href="/admin">Annonces</a> · <a href="/admin/demandes">Demandes</a> · <b>Candidatures proprio</b></nav>
+  <h1>Candidatures propriétaires</h1>
+  <table class="admin-table">
+    <thead><tr><th>#</th><th>Nom</th><th>Contact</th><th>Ville</th><th>Message</th><th>Statut</th><th>Reçu le</th></tr></thead>
+    <tbody>
+      <% for (const o of leads) { %>
+      <tr>
+        <td><%= o.id %></td><td><%= o.nom %></td>
+        <td><%= o.email %><%= o.phone ? " · " + o.phone : "" %></td>
+        <td><%= o.ville %></td><td class="small"><%= o.message %></td>
+        <td><span class="pill pill-draft"><%= o.status %></span></td>
+        <td><%= isoDate(o.created_at) %></td>
+      </tr>
+      <% } %>
+      <% if (!leads.length) { %><tr><td colspan="7" class="muted">Aucune candidature.</td></tr><% } %>
+    </tbody>
+  </table>
+  <p class="muted small">Process : contact → estimation → mandat DocuSign → création de l'annonce ici → reprise dans ImmobilierLoyer.</p>
+</section>
+<%- include("../../partials/foot") %>

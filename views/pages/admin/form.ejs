@@ -1,0 +1,108 @@
+<%- include("../../partials/head", { title: title }) %>
+<section class="admin-page">
+  <p><a href="/admin">← Retour aux annonces</a></p>
+  <h1><%= title %></h1>
+  <form method="post" class="stack admin-form">
+    <div class="grid2">
+      <label>Titre (FR) *<input name="title_fr" required value="<%= l ? l.title_fr : "" %>"></label>
+      <label>Titre (EN)<input name="title_en" value="<%= l ? l.title_en : "" %>"></label>
+    </div>
+    <div class="grid2">
+      <label>Description (FR)<textarea name="description_fr" rows="5"><%= l ? l.description_fr : "" %></textarea></label>
+      <label>Description (EN)<textarea name="description_en" rows="5"><%= l ? l.description_en : "" %></textarea></label>
+    </div>
+    <div class="grid3">
+      <label>Catégorie
+        <select name="category">
+          <option value="appartement_maison" <%= l && l.category === "appartement_maison" ? "selected" : "" %>>Appartement / Maison</option>
+          <option value="chambre" <%= l && l.category === "chambre" ? "selected" : "" %>>Chambre</option>
+        </select>
+      </label>
+      <label>Sous-catégorie
+        <select name="subcategory">
+          <option value="">—</option>
+          <option value="studio" <%= l && l.subcategory === "studio" ? "selected" : "" %>>Studio</option>
+          <option value="appartement" <%= l && l.subcategory === "appartement" ? "selected" : "" %>>Appartement</option>
+          <option value="maison" <%= l && l.subcategory === "maison" ? "selected" : "" %>>Maison</option>
+        </select>
+      </label>
+      <label>Type de bail
+        <select name="type_de_bail">
+          <option value="selon_situation" <%= l && l.type_de_bail === "selon_situation" ? "selected" : "" %>>Selon situation</option>
+          <option value="bail_mobilite" <%= l && l.type_de_bail === "bail_mobilite" ? "selected" : "" %>>Bail mobilité</option>
+          <option value="bail_civil" <%= l && l.type_de_bail === "bail_civil" ? "selected" : "" %>>Bail civil</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid3">
+      <label>Ville *
+        <select name="ville">
+          <option value="paris" <%= l && l.ville === "paris" ? "selected" : "" %>>Paris</option>
+          <option value="marseille" <%= !l || l.ville === "marseille" ? "selected" : "" %>>Marseille</option>
+          <option value="la-ciotat" <%= l && l.ville === "la-ciotat" ? "selected" : "" %>>La Ciotat</option>
+          <option value="montpellier" <%= l && l.ville === "montpellier" ? "selected" : "" %>>Montpellier</option>
+        </select>
+      </label>
+      <label>Quartier<input name="quartier" value="<%= l ? l.quartier : "" %>"></label>
+      <label>Adresse (interne)<input name="adresse" value="<%= l ? l.adresse : "" %>"></label>
+    </div>
+    <div class="grid3">
+      <label>Latitude<input name="lat" type="number" step="any" value="<%= l && l.lat != null ? l.lat : "" %>"></label>
+      <label>Longitude<input name="lng" type="number" step="any" value="<%= l && l.lng != null ? l.lng : "" %>"></label>
+      <label>Surface (m²)<input name="surface_m2" type="number" min="5" value="<%= l && l.surface_m2 != null ? l.surface_m2 : "" %>"></label>
+    </div>
+    <div class="grid3">
+      <label>Loyer mensuel TTC CC (€) *<input name="loyer_mensuel" required type="number" step="0.01" min="1" value="<%= l ? l.loyer_mensuel_cts/100 : "" %>"></label>
+      <label>Frais de ménage / séjour (€)<input name="frais_menage" type="number" step="0.01" min="0" value="<%= l ? l.frais_menage_cts/100 : "0" %>"></label>
+      <label>Dépôt de garantie (€)<input name="depot_garantie" type="number" step="0.01" min="0" value="<%= l ? l.depot_garantie_cts/100 : "0" %>"></label>
+    </div>
+    <div class="grid3">
+      <label>Meublé
+        <select name="meuble"><option value="oui">Oui</option><option value="non" <%= l && !l.meuble ? "selected" : "" %>>Non</option></select>
+      </label>
+      <label>Charges comprises
+        <select name="charges_comprises"><option value="oui">Oui</option><option value="non" <%= l && !l.charges_comprises ? "selected" : "" %>>Non</option></select>
+      </label>
+      <label>Durée minimale (mois)<input name="min_months" type="number" min="1" value="<%= l ? l.min_months : 1 %>"></label>
+    </div>
+    <label>Photos — une URL https par ligne (ordre = position)
+      <textarea name="photos_urls" rows="4" placeholder="https://…"><%= photosText %></textarea>
+    </label>
+    <label>Flux iCal à importer (Lodgify / Airbnb) — une URL par ligne
+      <textarea name="ical_import_urls" rows="3" placeholder="https://…"><%= icalText %></textarea>
+    </label>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+    <% if (l) { %><p class="muted small">Statut : <b><%= l.status %></b> — publication depuis la liste. Fiche publique : /logement/<%= l.slug %></p><% } %>
+  </form>
+
+  <% if (l) { %>
+  <h2 style="margin-top:36px">Indisponibilités</h2>
+  <p class="muted small">Export iCal de cette annonce : /ical/<%= l.slug %>.ics — les blocs importés (source « ical ») sont gérés par la synchro et ne sont pas supprimables ici.</p>
+  <table class="admin-table" style="max-width:640px">
+    <thead><tr><th>Du (inclus)</th><th>Au (départ, exclu)</th><th>Source</th><th></th></tr></thead>
+    <tbody>
+      <% for (const b of blocks) { %>
+      <tr>
+        <td><%= isoDate(b.start_date) %></td>
+        <td><%= isoDate(b.end_date) %></td>
+        <td><%= b.source %></td>
+        <td>
+          <% if (b.source === "manual") { %>
+          <form method="post" action="/admin/annonces/<%= l.id %>/blocks/<%= b.id %>/delete">
+            <button class="btn-small">Supprimer</button>
+          </form>
+          <% } %>
+        </td>
+      </tr>
+      <% } %>
+      <% if (!blocks.length) { %><tr><td colspan="4" class="muted">Aucun bloc.</td></tr><% } %>
+    </tbody>
+  </table>
+  <form method="post" action="/admin/annonces/<%= l.id %>/blocks" class="filters" style="margin-top:10px">
+    <input type="date" name="start_date" required>
+    <input type="date" name="end_date" required>
+    <button class="btn btn-primary" type="submit">Bloquer la période</button>
+  </form>
+  <% } %>
+</section>
+<%- include("../../partials/foot") %>

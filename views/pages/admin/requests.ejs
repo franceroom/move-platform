@@ -1,0 +1,33 @@
+<%- include("../../partials/head", { title: "Demandes" }) %>
+<section class="admin-page">
+  <nav class="admin-nav"><a href="/admin">Annonces</a> · <b>Demandes</b> · <a href="/admin/proprietaires">Candidatures proprio</a></nav>
+  <h1>Demandes de réservation</h1>
+  <% if (path.indexOf("conflit") !== -1) { %><p class="error">Conflit de dates : la période n'était plus libre, demande refusée automatiquement.</p><% } %>
+  <table class="admin-table">
+    <thead><tr><th>#</th><th>Annonce</th><th>Locataire</th><th>Période</th><th>Réserve pour</th><th>1er mois</th><th>Statut</th><th>Action</th></tr></thead>
+    <tbody>
+      <% for (const r of reqs) { %>
+      <tr>
+        <td><%= r.id %></td>
+        <td><a href="/logement/<%= r.slug %>"><%= r.title_fr %></a></td>
+        <td><%= r.first_name %> <%= r.last_name %><br><span class="muted small"><%= r.tenant_email %><%= r.phone ? " · " + r.phone : "" %></span></td>
+        <td><%= isoDate(r.start_date) %> → <%= isoDate(r.end_date) %></td>
+        <td><%= r.reserve_pour %></td>
+        <td><%= euros(r.total_first_month_cts) %> €</td>
+        <td><span class="pill pill-<%= r.status === "paid" ? "published" : (r.status === "declined" ? "archived" : "draft") %>"><%= r.status %></span></td>
+        <td>
+          <% if (r.status === "pending") { %>
+          <form method="post" action="/admin/demandes/<%= r.id %>/decision" style="display:flex;gap:6px">
+            <button class="btn-small" name="decision" value="accept">Accepter</button>
+            <button class="btn-small" name="decision" value="decline">Refuser</button>
+          </form>
+          <% } %>
+          <% if (r.message) { %><details><summary class="small muted">message</summary><p class="small"><%= r.message %></p></details><% } %>
+        </td>
+      </tr>
+      <% } %>
+      <% if (!reqs.length) { %><tr><td colspan="8" class="muted">Aucune demande.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include("../../partials/foot") %>
