@@ -122,5 +122,7 @@
   "account.deposit.pay": "Payer mon dépôt de garantie",
   "account.deposit.paid": "Dépôt de garantie reçu — remboursement automatique sous 48 h après votre départ.",
   "account.deposit.refunded": "Dépôt de garantie remboursé.",
-  "account.deposit.issue": "Dépôt de garantie : traitement en cours — notre équipe vous contacte."
+  "account.deposit.issue": "Dépôt de garantie : traitement en cours — notre équipe vous contacte.",
+  "login.google": "Continuer avec Google",
+  "login.or": "ou"
 }

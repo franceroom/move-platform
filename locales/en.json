@@ -122,5 +122,7 @@
   "account.deposit.pay": "Pay my security deposit",
   "account.deposit.paid": "Security deposit received — automatically refunded within 48h after your departure.",
   "account.deposit.refunded": "Security deposit refunded.",
-  "account.deposit.issue": "Security deposit: being processed — our team will contact you."
+  "account.deposit.issue": "Security deposit: being processed — our team will contact you.",
+  "login.google": "Continue with Google",
+  "login.or": "or"
 }
