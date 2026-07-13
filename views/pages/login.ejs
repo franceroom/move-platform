@@ -2,6 +2,12 @@
 <section class="content-page narrow">
   <h1><%= t("nav.login") %></h1>
   <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <% if (googleEnabled) { %>
+    <a class="btn btn-google" href="/auth/google<%= next ? "?next=" + encodeURIComponent(next) : "" %>">
+      <span class="g-logo">G</span> <%= t("login.google") %>
+    </a>
+    <div class="or-sep"><span><%= t("login.or") %></span></div>
+  <% } %>
   <form method="post" action="/connexion" class="stack">
     <input type="hidden" name="next" value="<%= next %>">
     <label><%= t("login.email") %><input type="email" name="email" required autocomplete="email"></label>

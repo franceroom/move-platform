@@ -2,6 +2,12 @@
 <section class="content-page narrow">
   <h1><%= t("nav.signup") %></h1>
   <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <% if (googleEnabled) { %>
+    <a class="btn btn-google" href="/auth/google<%= next ? "?next=" + encodeURIComponent(next) : "" %>">
+      <span class="g-logo">G</span> <%= t("login.google") %>
+    </a>
+    <div class="or-sep"><span><%= t("login.or") %></span></div>
+  <% } %>
   <form method="post" action="/inscription" class="stack">
     <input type="hidden" name="next" value="<%= next %>">
     <div class="grid2">
