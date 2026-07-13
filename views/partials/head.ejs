@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== "undefined" && title ? title + " | MOVE" : t("site.tagline") %></title>
+  <meta name="description" content="<%= typeof metaDescription !== "undefined" && metaDescription ? metaDescription : t("site.metaDescription") %>">
+  <link rel="stylesheet" href="/css/move.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">move<span class="brand-dot">.</span><span class="brand-sub">by France Room</span></a>
+  <nav class="nav">
+    <a href="/logements"><%= t("nav.search") %></a>
+    <a href="/confier-mon-bien"><%= t("nav.owners") %></a>
+    <a href="/a-propos"><%= t("nav.about") %></a>
+    <% if (user) { %>
+      <a href="/compte"><%= user.first_name || user.email %></a>
+    <% } else { %>
+      <a href="/connexion"><%= t("nav.login") %></a>
+    <% } %>
+    <span class="lang">
+      <a href="?lang=fr" class="<%= locale === "fr" ? "on" : "" %>">FR</a>·<a href="?lang=en" class="<%= locale === "en" ? "on" : "" %>">EN</a>
+    </span>
+  </nav>
+</header>
+<main>
