@@ -1,0 +1,12 @@
+<%- include("../partials/head", { title: t("about.title") }) %>
+<section class="content-page">
+  <h1><%= t("about.h1") %></h1>
+  <p class="lead"><%= t("about.p1") %></p>
+  <h2><%= t("about.forWho.title") %></h2>
+  <p><%= t("about.forWho.body") %></p>
+  <h2><%= t("about.mgmt.title") %></h2>
+  <p><%= t("about.mgmt.body") %></p>
+  <p><a class="btn btn-primary" href="/logements"><%= t("home.hero.cta") %></a>
+     <a class="btn btn-ghost" href="/confier-mon-bien"><%= t("nav.owners") %></a></p>
+</section>
+<%- include("../partials/foot") %>

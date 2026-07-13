@@ -1,0 +1,24 @@
+<%- include("../partials/head", { title: t("request.title") }) %>
+<section class="content-page">
+  <h1><%= t("request.title") %></h1>
+  <p class="muted"><%= locale === "en" && l.title_en ? l.title_en : l.title_fr %> — <%= euros(l.loyer_mensuel_cts) %> € <%= t("search.perMonth") %><% if (l.frais_menage_cts > 0) { %> + <%= euros(l.frais_menage_cts) %> € <%= t("listing.cleaningFee") %><% } %></p>
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <form method="post" class="stack" style="max-width:520px">
+    <div class="grid2">
+      <label><%= t("request.startDate") %> *<input type="date" name="start_date" required value="<%= form.start_date || "" %>"></label>
+      <label><%= t("request.months", { n: l.min_months }) %> *<input type="number" name="months" min="<%= l.min_months %>" max="24" required value="<%= form.months || l.min_months %>"></label>
+    </div>
+    <label><%= t("request.reserveFor") %> *
+      <select name="reserve_pour" required>
+        <option value=""></option>
+        <option value="entreprise" <%= form.reserve_pour === "entreprise" ? "selected" : "" %>><%= t("request.reserveFor.entreprise") %></option>
+        <option value="usage_personnel" <%= form.reserve_pour === "usage_personnel" ? "selected" : "" %>><%= t("request.reserveFor.usage_personnel") %></option>
+        <option value="residence_principale" <%= form.reserve_pour === "residence_principale" ? "selected" : "" %>><%= t("request.reserveFor.residence_principale") %></option>
+      </select>
+    </label>
+    <label><%= t("request.message") %><textarea name="message" rows="4" placeholder="<%= t("request.messagePh") %>"></textarea></label>
+    <button class="btn btn-primary" type="submit"><%= t("request.submit") %></button>
+    <p class="muted small"><%= t("request.note") %></p>
+  </form>
+</section>
+<%- include("../partials/foot") %>

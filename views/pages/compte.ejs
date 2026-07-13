@@ -1,0 +1,41 @@
+<%- include("../partials/head", { title: t("account.title") }) %>
+<section class="content-page">
+  <div class="admin-head">
+    <h1><%= t("account.title") %></h1>
+    <form method="post" action="/deconnexion"><button class="btn btn-ghost"><%= t("nav.logout") %></button></form>
+  </div>
+  <% if (flash === "envoyee") { %><p class="success"><%= t("account.flash.sent") %></p><% } %>
+  <% if (flash === "ok") { %><p class="success"><%= t("account.flash.paid") %></p><% } %>
+  <% if (flash === "annule") { %><p class="error"><%= t("account.flash.cancelled") %></p><% } %>
+  <% if (cflash === "ok") { %><p class="success"><%= t("account.deposit.paid") %></p><% } %>
+  <% if (cflash === "annule") { %><p class="error"><%= t("account.flash.cancelled") %></p><% } %>
+  <h2><%= t("account.requests") %></h2>
+  <% if (!reqs.length) { %><p class="muted"><%= t("account.none") %> <a href="/logements"><u><%= t("nav.search") %></u></a></p><% } %>
+  <% for (const r of reqs) { %>
+    <div class="card" style="margin-bottom:14px">
+      <b><a href="/logement/<%= r.slug %>"><%= locale === "en" && r.title_en ? r.title_en : r.title_fr %></a></b>
+      <p class="muted small"><%= isoDate(r.start_date) %> → <%= isoDate(r.end_date) %> · <%= euros(r.total_first_month_cts) %> € <%= t("account.firstMonth") %></p>
+      <p>
+        <span class="pill pill-<%= r.status === "paid" ? "published" : (r.status === "declined" ? "archived" : "draft") %>"><%= t("status." + r.status) %></span>
+        <% if (r.status === "accepted") { %>
+          <form method="post" action="/demande/<%= r.id %>/payer" style="display:inline">
+            <button class="btn btn-primary" style="margin-left:10px"><%= t("account.pay") %></button>
+          </form>
+        <% } %>
+      </p>
+      <% if (r.status === "paid" && r.deposit_status && r.deposit_status !== "none") { %>
+        <p class="deposit-line <%= r.deposit_status %>">
+          <% if (r.deposit_status === "paye" || r.deposit_status === "pending") { %><%= t("account.deposit.paid") %><% } %>
+          <% if (r.deposit_status === "rembourse") { %><%= t("account.deposit.refunded") %><% } %>
+          <% if (r.deposit_status === "litige" || r.deposit_status === "erreur_remboursement") { %><%= t("account.deposit.issue") %><% } %>
+        </p>
+      <% } %>
+      <% if (r.status === "paid" && (!r.deposit_status || r.deposit_status === "none")) { %>
+        <form method="post" action="/deposit/pay/<%= r.id %>">
+          <button class="btn btn-primary btn-deposit"><%= t("account.deposit.pay") %></button>
+        </form>
+      <% } %>
+    </div>
+  <% } %>
+</section>
+<%- include("../partials/foot") %>

@@ -1,0 +1,25 @@
+<%- include("../partials/head", { title: null }) %>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1><%= t("home.hero.title") %></h1>
+    <p><%= t("home.hero.subtitle") %></p>
+    <a class="btn btn-primary" href="/logements"><%= t("home.hero.cta") %></a>
+  </div>
+</section>
+
+<section class="why">
+  <h2><%= t("home.why.title") %></h2>
+  <div class="cards">
+    <div class="card">
+      <h3><%= t("home.why.tenants.title") %></h3>
+      <p><%= t("home.why.tenants.body") %></p>
+    </div>
+    <div class="card">
+      <h3><%= t("home.why.owners.title") %></h3>
+      <p><%= t("home.why.owners.body") %></p>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/foot") %>

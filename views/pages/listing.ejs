@@ -1,0 +1,75 @@
+<%- include("../partials/head", { title: title, metaDescription: metaDescription }) %>
+
+<article class="listing-page">
+  <div class="gallery">
+    <% if (l.photos && l.photos.length) { %>
+      <% for (const [i, p] of l.photos.entries()) { %>
+        <img class="<%= i === 0 ? "main" : "" %>" src="<%= p.url %>" alt="<%= p.alt %>" loading="<%= i === 0 ? "eager" : "lazy" %>">
+      <% } %>
+    <% } else { %>
+      <div class="thumb-empty big">move.</div>
+    <% } %>
+  </div>
+
+  <div class="listing-grid">
+    <div class="listing-main">
+      <h1><%= locale === "en" && l.title_en ? l.title_en : l.title_fr %></h1>
+      <p class="listing-loc"><%= l.ville.charAt(0).toUpperCase() + l.ville.slice(1) %><%= l.quartier ? " · " + l.quartier : "" %></p>
+
+      <ul class="badges">
+        <% if (l.surface_m2) { %><li><%= l.surface_m2 %> m²</li><% } %>
+        <% if (l.meuble) { %><li><%= t("listing.furnished") %></li><% } %>
+        <% if (l.charges_comprises) { %><li><%= t("listing.allInclusive") %></li><% } %>
+        <li><%= t("listing.minStay", { n: l.min_months }) %></li>
+      </ul>
+
+      <p class="listing-desc"><%= locale === "en" && l.description_en ? l.description_en : l.description_fr %></p>
+
+      <h2 class="h-cal"><%= t("listing.availability") %></h2>
+      <div class="cal-legend"><span class="cal-dot free"></span><%= t("listing.cal.free") %> <span class="cal-dot busy"></span><%= t("listing.cal.busy") %></div>
+      <div class="calendars">
+        <% const monthNames = locale === "en"
+             ? ["January","February","March","April","May","June","July","August","September","October","November","December"]
+             : ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]; %>
+        <% for (const m of months) { %>
+          <div class="cal">
+            <div class="cal-title"><%= monthNames[m.month] %> <%= m.year %></div>
+            <div class="cal-grid">
+              <% const dows = locale === "en" ? ["M","T","W","T","F","S","S"] : ["L","M","M","J","V","S","D"]; %>
+              <% for (const d of dows) { %><span class="cal-dow"><%= d %></span><% } %>
+              <% for (let i = 0; i < m.firstDow; i++) { %><span></span><% } %>
+              <% for (const day of m.days) { %>
+                <span class="cal-day <%= day.blocked ? "busy" : "" %> <%= day.past ? "past" : "" %>"><%= day.d %></span>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      <% if (l.lat != null && l.lng != null && mapboxToken) { %>
+        <div id="map" class="listing-map" data-token="<%= mapboxToken %>" data-lat="<%= l.lat %>" data-lng="<%= l.lng %>"></div>
+      <% } %>
+    </div>
+
+    <aside class="order-panel">
+      <div class="price"><%= euros(l.loyer_mensuel_cts) %> € <span><%= t("search.perMonth") %></span></div>
+      <% if (l.frais_menage_cts > 0) { %>
+        <p class="fee">+ <%= euros(l.frais_menage_cts) %> € <%= t("listing.cleaningFee") %></p>
+      <% } %>
+      <% if (l.depot_garantie_cts > 0) { %>
+        <p class="fee"><%= t("listing.deposit") %> : <%= euros(l.depot_garantie_cts) %> €</p>
+      <% } %>
+      <p class="fee free"><%= t("listing.noBookingFee") %></p>
+      <a class="btn btn-primary btn-block" href="/logement/<%= l.slug %>/demande"><%= t("listing.requestToBook") %></a>
+      <p class="muted small"><%= t("listing.moderated") %></p>
+    </aside>
+  </div>
+</article>
+
+<% if (l.lat != null && l.lng != null && mapboxToken) { %>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+<script src="/js/listing-map.js"></script>
+<% } %>
+
+<%- include("../partials/foot") %>

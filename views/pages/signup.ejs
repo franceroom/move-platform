@@ -1,0 +1,18 @@
+<%- include("../partials/head", { title: t("nav.signup") }) %>
+<section class="content-page narrow">
+  <h1><%= t("nav.signup") %></h1>
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <form method="post" action="/inscription" class="stack">
+    <input type="hidden" name="next" value="<%= next %>">
+    <div class="grid2">
+      <label><%= t("signup.firstName") %> *<input name="first_name" required value="<%= form.first_name || "" %>"></label>
+      <label><%= t("signup.lastName") %> *<input name="last_name" required value="<%= form.last_name || "" %>"></label>
+    </div>
+    <label>Email *<input type="email" name="email" required value="<%= form.email || "" %>"></label>
+    <label><%= t("signup.phone") %><input name="phone" value="<%= form.phone || "" %>"></label>
+    <label><%= t("login.password") %> * <span class="muted small">(<%= t("signup.pwHint") %>)</span><input type="password" name="password" required minlength="8"></label>
+    <button class="btn btn-primary" type="submit"><%= t("nav.signup") %></button>
+    <p class="muted small"><%= t("signup.haveAccount") %> <a href="/connexion?next=<%= encodeURIComponent(next) %>"><u><%= t("nav.login") %></u></a></p>
+  </form>
+</section>
+<%- include("../partials/foot") %>

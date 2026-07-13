@@ -1,0 +1,64 @@
+<%- include("../partials/head", { title: t("search.title") }) %>
+
+<section class="search-page">
+  <aside class="search-col">
+    <h1><%= t("search.title") %> <span class="count">(<%= results.length %>)</span></h1>
+
+    <form class="filters" method="get" action="/logements">
+      <select name="ville">
+        <option value=""><%= t("search.filters.city") %></option>
+        <option value="paris" <%= filters.ville === "paris" ? "selected" : "" %>>Paris</option>
+        <option value="marseille" <%= filters.ville === "marseille" ? "selected" : "" %>>Marseille</option>
+        <option value="la-ciotat" <%= filters.ville === "la-ciotat" ? "selected" : "" %>>La Ciotat</option>
+      </select>
+      <select name="cat">
+        <option value=""><%= t("search.filters.category") %></option>
+        <option value="chambre" <%= filters.cat === "chambre" ? "selected" : "" %>><%= t("search.filters.category.chambre") %></option>
+        <option value="appartement_maison" <%= filters.cat === "appartement_maison" ? "selected" : "" %>><%= t("search.filters.category.appartement_maison") %></option>
+      </select>
+      <select name="sous">
+        <option value="">—</option>
+        <option value="studio" <%= filters.sous === "studio" ? "selected" : "" %>><%= t("search.filters.subcategory.studio") %></option>
+        <option value="appartement" <%= filters.sous === "appartement" ? "selected" : "" %>><%= t("search.filters.subcategory.appartement") %></option>
+        <option value="maison" <%= filters.sous === "maison" ? "selected" : "" %>><%= t("search.filters.subcategory.maison") %></option>
+      </select>
+      <input type="number" name="budget" min="0" step="50" placeholder="<%= t("search.filters.budget") %>" value="<%= filters.budgetMaxCts ? filters.budgetMaxCts/100 : "" %>">
+      <button class="btn btn-primary" type="submit"><%= t("search.filters.apply") %></button>
+    </form>
+
+    <div class="results">
+      <% if (!results.length) { %>
+        <p class="muted"><%= t("search.none") %></p>
+      <% } %>
+      <% for (const l of results) { %>
+        <a class="result-card" href="/logement/<%= l.slug %>">
+          <div class="thumb">
+            <% if (l.photos && l.photos.length) { %>
+              <img src="<%= l.photos[0].url %>" alt="<%= l.photos[0].alt %>" loading="lazy">
+            <% } else { %>
+              <div class="thumb-empty">move.</div>
+            <% } %>
+          </div>
+          <div class="result-body">
+            <div class="result-price"><%= euros(l.loyer_mensuel_cts) %> € <%= t("search.perMonth") %></div>
+            <div class="result-title"><%= locale === "en" && l.title_en ? l.title_en : l.title_fr %></div>
+            <div class="result-meta">
+              <%= l.ville.charAt(0).toUpperCase() + l.ville.slice(1) %><%= l.quartier ? " · " + l.quartier : "" %>
+              <%= l.surface_m2 ? " · " + l.surface_m2 + " m²" : "" %>
+            </div>
+          </div>
+        </a>
+      <% } %>
+    </div>
+  </aside>
+
+  <div id="map" class="map-col" data-pins='<%- pins %>' data-token="<%= mapboxToken %>"></div>
+</section>
+
+<% if (mapboxToken) { %>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+<script src="/js/search-map.js"></script>
+<% } %>
+
+<%- include("../partials/foot") %>
