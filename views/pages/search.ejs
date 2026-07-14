@@ -34,7 +34,7 @@
         <a class="result-card" href="/logement/<%= l.slug %>">
           <div class="thumb">
             <% if (l.photos && l.photos.length) { %>
-              <img src="<%= l.photos[0].url %>" alt="<%= l.photos[0].alt %>" loading="lazy">
+              <img src="<%= photoSrc(l.photos[0]) %>" alt="<%= l.photos[0].alt %>" loading="lazy">
             <% } else { %>
               <div class="thumb-empty">move.</div>
             <% } %>

@@ -4,7 +4,7 @@
   <div class="gallery">
     <% if (l.photos && l.photos.length) { %>
       <% for (const [i, p] of l.photos.entries()) { %>
-        <img class="<%= i === 0 ? "main" : "" %>" src="<%= p.url %>" alt="<%= p.alt %>" loading="<%= i === 0 ? "eager" : "lazy" %>">
+        <img class="<%= i === 0 ? "main" : "" %>" src="<%= photoSrc(p) %>" alt="<%= p.alt %>" loading="<%= i === 0 ? "eager" : "lazy" %>">
       <% } %>
     <% } else { %>
       <div class="thumb-empty big">move.</div>
