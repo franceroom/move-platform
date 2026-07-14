@@ -95,3 +95,7 @@ CREATE TABLE IF NOT EXISTS owner_leads (
   status     TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','contacted','mandate_sent','signed','rejected')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Photos téléchargées : stockées en base (le disque Render Free est éphémère).
+ALTER TABLE listing_photos ADD COLUMN IF NOT EXISTS data BYTEA;
+ALTER TABLE listing_photos ADD COLUMN IF NOT EXISTS mime TEXT;
