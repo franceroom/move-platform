@@ -28,7 +28,9 @@ async function search({ ville, cat, sous, budgetMaxCts }) {
 }
 
 async function photosOf(listingId) {
-  return q("SELECT * FROM listing_photos WHERE listing_id = $1 ORDER BY position", [listingId]);
+  return q(
+    "SELECT id, listing_id, url, alt, position, mime, (data IS NOT NULL) AS has_data FROM listing_photos WHERE listing_id = $1 ORDER BY position",
+    [listingId]);
 }
 
 async function bySlug(slug) {
@@ -88,9 +90,7 @@ async function create(b) {
     [slug, d.title_fr, d.title_en, d.description_fr, d.description_en, d.category, d.subcategory,
      d.ville, d.quartier, d.adresse, d.lat, d.lng, d.surface_m2, d.meuble, d.charges_comprises, d.type_de_bail,
      d.loyer_mensuel_cts, d.frais_menage_cts, d.depot_garantie_cts, d.min_months, d.ical_import_urls]);
-  const id = rows[0].id;
-  await setPhotos(id, b.photos_urls);
-  return id;
+  return rows[0].id;
 }
 
 async function update(id, b) {
@@ -104,15 +104,18 @@ async function update(id, b) {
     [d.title_fr, d.title_en, d.description_fr, d.description_en, d.category, d.subcategory,
      d.ville, d.quartier, d.adresse, d.lat, d.lng, d.surface_m2, d.meuble, d.charges_comprises,
      d.type_de_bail, d.loyer_mensuel_cts, d.frais_menage_cts, d.depot_garantie_cts, d.min_months, d.ical_import_urls, id]);
-  await setPhotos(id, b.photos_urls);
 }
 
-async function setPhotos(listingId, urlsText) {
-  if (urlsText == null) return;
-  await q("DELETE FROM listing_photos WHERE listing_id = $1", [listingId]);
-  const urls = String(urlsText).split(/\r?\n/).map(s => s.trim()).filter(s => /^https?:\/\//.test(s));
-  for (let i = 0; i < urls.length; i++) {
-    await q("INSERT INTO listing_photos (listing_id, url, position) VALUES ($1,$2,$3)", [listingId, urls[i], i]);
+// Photos : suppressions cochées + nouveaux fichiers (blobs) ajoutés à la suite.
+async function applyPhotos(listingId, { deleteIds = [], files = [] } = {}) {
+  for (const id of deleteIds) {
+    await q("DELETE FROM listing_photos WHERE id = $1 AND listing_id = $2", [id, listingId]);
+  }
+  const existing = await photosOf(listingId);
+  let pos = existing.length ? Math.max(...existing.map(p => p.position)) + 1 : 0;
+  for (const f of files) {
+    await q("INSERT INTO listing_photos (listing_id, url, alt, position, data, mime) VALUES ($1,'',$2,$3,$4,$5)",
+      [listingId, f.originalname || "", pos++, f.buffer, f.mimetype || "image/jpeg"]);
   }
 }
 
@@ -121,4 +124,4 @@ async function setStatus(id, status) {
   await q("UPDATE listings SET status=$1, updated_at=now() WHERE id=$2", [status, id]);
 }
 
-module.exports = { search, bySlug, byId, allForAdmin, create, update, setStatus, euros, VILLES, CATS, SUBS };
+module.exports = { search, bySlug, byId, allForAdmin, create, update, applyPhotos, setStatus, euros, VILLES, CATS, SUBS };
