@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const L = require("../lib/listings");
+const { q } = require("../lib/db");
 const cal = require("../lib/calendar");
 
 router.get("/logements", async (req, res, next) => {
@@ -37,6 +38,16 @@ router.get("/logement/:slug", async (req, res, next) => {
       l, euros: L.euros,
       mapboxToken: process.env.MAPBOX_TOKEN || ""
     });
+  } catch (e) { next(e); }
+});
+
+router.get("/photo/:id", async (req, res, next) => {
+  try {
+    const rows = await q("SELECT data, mime FROM listing_photos WHERE id = $1", [req.params.id]);
+    const p = rows[0];
+    if (!p || !p.data) return res.status(404).send("Not found");
+    res.set("Cache-Control", "public, max-age=31536000, immutable");
+    res.type(p.mime || "image/jpeg").send(p.data);
   } catch (e) { next(e); }
 });
 

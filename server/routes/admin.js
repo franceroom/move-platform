@@ -1,5 +1,7 @@
 // Administration France Room — interface interne en français.
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024, files: 20 } });
 const router = express.Router();
 const L = require("../lib/listings");
 const { requireAdmin } = require("./auth");
@@ -20,9 +22,10 @@ router.get("/annonces/new", (req, res) => {
   res.render("pages/admin/form", { title: "Nouvelle annonce", l: null, photosText: "", icalText: "", blocks: [] });
 });
 
-router.post("/annonces/new", async (req, res, next) => {
+router.post("/annonces/new", upload.array("photos"), async (req, res, next) => {
   try {
     const id = await L.create(req.body);
+    await L.applyPhotos(id, { files: req.files || [] });
     res.redirect(`/admin/annonces/${id}/edit?ok=1`);
   } catch (e) { next(e); }
 });
@@ -40,9 +43,11 @@ router.get("/annonces/:id/edit", async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-router.post("/annonces/:id/edit", async (req, res, next) => {
+router.post("/annonces/:id/edit", upload.array("photos"), async (req, res, next) => {
   try {
     await L.update(req.params.id, req.body);
+    const del = [].concat(req.body.delete_photo || []).map(Number).filter(Boolean);
+    await L.applyPhotos(req.params.id, { deleteIds: del, files: req.files || [] });
     res.redirect(`/admin/annonces/${req.params.id}/edit?ok=1`);
   } catch (e) { next(e); }
 });
