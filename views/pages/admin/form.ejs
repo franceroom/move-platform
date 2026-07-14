@@ -2,7 +2,7 @@
 <section class="admin-page">
   <p><a href="/admin">← Retour aux annonces</a></p>
   <h1><%= title %></h1>
-  <form method="post" class="stack admin-form">
+  <form method="post" class="stack admin-form" enctype="multipart/form-data" id="annonce-form">
     <div class="grid2">
       <label>Titre (FR) *<input name="title_fr" required value="<%= l ? l.title_fr : "" %>"></label>
       <label>Titre (EN)<input name="title_en" value="<%= l ? l.title_en : "" %>"></label>
@@ -65,9 +65,23 @@
       </label>
       <label>Durée minimale (mois)<input name="min_months" type="number" min="1" value="<%= l ? l.min_months : 1 %>"></label>
     </div>
-    <label>Photos — une URL https par ligne (ordre = position)
-      <textarea name="photos_urls" rows="4" placeholder="https://…"><%= photosText %></textarea>
+    <% if (l && l.photos && l.photos.length) { %>
+    <div>
+      <b style="font-size:14px">Photos actuelles</b> <span class="muted small">(cocher pour supprimer à l'enregistrement)</span>
+      <div class="photo-grid">
+        <% for (const p of l.photos) { %>
+          <label class="photo-cell">
+            <img src="<%= photoSrc(p) %>" alt="">
+            <span><input type="checkbox" name="delete_photo" value="<%= p.id %>"> Supprimer</span>
+          </label>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+    <label>Ajouter des photos (JPEG/PNG — compressées automatiquement avant envoi)
+      <input type="file" name="photos" id="photos-input" multiple accept="image/*">
     </label>
+    <p class="muted small" id="photos-info"></p>
     <label>Flux iCal à importer (Lodgify / Airbnb) — une URL par ligne
       <textarea name="ical_import_urls" rows="3" placeholder="https://…"><%= icalText %></textarea>
     </label>
@@ -105,4 +119,5 @@
   </form>
   <% } %>
 </section>
+<script src="/js/admin-photos.js"></script>
 <%- include("../../partials/foot") %>
