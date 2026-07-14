@@ -159,3 +159,8 @@ main { min-height: 60vh; }
 .g-logo { font-weight: 800; color: #4285F4; border: 1px solid #ddd; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
 .or-sep { display: flex; align-items: center; gap: 10px; color: var(--gris); font-size: 13px; margin: 10px 0; }
 .or-sep::before, .or-sep::after { content: ""; flex: 1; height: 1px; background: #e5e5e5; }
+
+/* Admin photos */
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 8px; }
+.photo-cell { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 400; }
+.photo-cell img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
