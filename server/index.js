@@ -25,6 +25,7 @@ app.use(cookieSession({
 app.use(i18nMiddleware);
 
 app.use((req, res, next) => {
+  res.locals.photoSrc = (p) => (p && p.url ? p.url : (p ? "/photo/" + p.id : ""));
   res.locals.isoDate = (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
   res.locals.path = req.path;
   res.locals.user = req.session.user || null;
