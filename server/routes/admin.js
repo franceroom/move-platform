@@ -5,6 +5,7 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 *
 const router = express.Router();
 const L = require("../lib/listings");
 const { requireAdmin } = require("./auth");
+const translate = require("../lib/translate");
 const cal = require("../lib/calendar");
 const { isoDate } = require("../lib/calendar");
 const { q } = require("../lib/db");
@@ -19,7 +20,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/annonces/new", (req, res) => {
-  res.render("pages/admin/form", { title: "Nouvelle annonce", l: null, photosText: "", icalText: "", blocks: [] });
+  res.render("pages/admin/form", { title: "Nouvelle annonce", l: null, photosText: "", icalText: "", blocks: [], translateEnabled: translate.enabled() });
 });
 
 router.post("/annonces/new", upload.array("photos"), async (req, res, next) => {
@@ -39,7 +40,7 @@ router.get("/annonces/:id/edit", async (req, res, next) => {
     if (typeof icalUrls === "string") { try { icalUrls = JSON.parse(icalUrls); } catch { icalUrls = []; } }
     const icalText = (icalUrls || []).join("\n");
     const blocks = await cal.blocksOf(l.id);
-    res.render("pages/admin/form", { title: `Annonce #${l.id}`, l, photosText, icalText, blocks });
+    res.render("pages/admin/form", { title: `Annonce #${l.id}`, l, photosText, icalText, blocks, translateEnabled: translate.enabled() });
   } catch (e) { next(e); }
 });
 
@@ -115,6 +116,15 @@ router.get("/proprietaires", async (req, res, next) => {
     const leads = await q("SELECT * FROM owner_leads ORDER BY created_at DESC");
     res.render("pages/admin/leads", { title: "Candidatures propriétaires", leads });
   } catch (e) { next(e); }
+});
+
+router.post("/traduire", express.json(), async (req, res) => {
+  if (!translate.enabled()) return res.status(503).json({ error: "Traduction non configurée (DEEPL_API_KEY)" });
+  try {
+    const title = await translate.toEnglish(req.body.title_fr || "");
+    const description = await translate.toEnglish(req.body.description_fr || "");
+    res.json({ title_en: title, description_en: description });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 module.exports = router;
