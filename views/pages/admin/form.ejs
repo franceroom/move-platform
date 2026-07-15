@@ -4,12 +4,18 @@
   <h1><%= title %></h1>
   <form method="post" class="stack admin-form" enctype="multipart/form-data" id="annonce-form">
     <div class="grid2">
-      <label>Titre (FR) *<input name="title_fr" required value="<%= l ? l.title_fr : "" %>"></label>
-      <label>Titre (EN)<input name="title_en" value="<%= l ? l.title_en : "" %>"></label>
+      <label>Titre (FR) *<input name="title_fr" id="title_fr" required value="<%= l ? l.title_fr : "" %>"></label>
+      <label>Titre (EN)<input name="title_en" id="title_en" value="<%= l ? l.title_en : "" %>"></label>
     </div>
+    <% if (translateEnabled) { %>
+    <div class="translate-row">
+      <button type="button" id="btn-traduire" class="btn-small">🌐 Traduire le FR en anglais</button>
+      <span id="translate-info" class="muted small"></span>
+    </div>
+    <% } %>
     <div class="grid2">
-      <label>Description (FR)<textarea name="description_fr" rows="5"><%= l ? l.description_fr : "" %></textarea></label>
-      <label>Description (EN)<textarea name="description_en" rows="5"><%= l ? l.description_en : "" %></textarea></label>
+      <label>Description (FR)<textarea name="description_fr" id="description_fr" rows="5"><%= l ? l.description_fr : "" %></textarea></label>
+      <label>Description (EN)<textarea name="description_en" id="description_en" rows="5"><%= l ? l.description_en : "" %></textarea></label>
     </div>
     <div class="grid3">
       <label>Catégorie
@@ -120,4 +126,5 @@
   <% } %>
 </section>
 <script src="/js/admin-photos.js"></script>
+<% if (translateEnabled) { %><script src="/js/admin-translate.js"></script><% } %>
 <%- include("../../partials/foot") %>

@@ -1,17 +1,22 @@
 <%- include("../../partials/head", { title: "Admin" }) %>
 <section class="admin-page">
   <div class="admin-head">
-    <h1>Annonces</h1>\n    <nav class="admin-nav"><a href="/admin">Annonces</a> · <a href="/admin/demandes">Demandes</a> · <a href="/admin/proprietaires">Candidatures proprio</a></nav>
+    <h1>Annonces</h1>
     <div>
       <a class="btn btn-primary" href="/admin/annonces/new">+ Nouvelle annonce</a>
       <form method="post" action="/deconnexion" style="display:inline"><button class="btn btn-ghost">Se déconnecter</button></form>
     </div>
   </div>
+  <nav class="admin-nav"><b>Annonces</b> · <a href="/admin/demandes">Demandes</a> · <a href="/admin/proprietaires">Candidatures proprio</a></nav>
+  <div class="admin-search">
+    <input type="search" id="annonce-search" placeholder="🔎 Filtrer : titre, ville, catégorie, prix, statut…" autocomplete="off">
+    <span id="search-count" class="muted small"></span>
+  </div>
   <table class="admin-table">
     <thead><tr><th>ID</th><th>Titre</th><th>Ville</th><th>Catégorie</th><th>Loyer</th><th>Statut</th><th></th></tr></thead>
     <tbody>
       <% for (const r of rows) { %>
-      <tr>
+      <tr class="annonce-row" data-filtre="<%= ((r.title_fr||"") + " " + (r.title_en||"") + " " + (r.ville||"") + " " + (r.category||"") + " " + (r.subcategory||"") + " " + (euros(r.loyer_mensuel_cts)) + " " + (r.status||"")).toLowerCase() %>">
         <td><%= r.id %></td>
         <td><a href="/admin/annonces/<%= r.id %>/edit"><%= r.title_fr %></a></td>
         <td><%= r.ville %></td>
@@ -32,4 +37,5 @@
     </tbody>
   </table>
 </section>
+<script src="/js/admin-search.js"></script>
 <%- include("../../partials/foot") %>
