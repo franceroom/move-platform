@@ -164,3 +164,8 @@ main { min-height: 60vh; }
 .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 8px; }
 .photo-cell { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 400; }
 .photo-cell img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 8px; border: 1px solid #eee; }
+
+/* Recherche admin */
+.admin-search { margin: 10px 0 4px; display: flex; align-items: center; gap: 12px; }
+.admin-search input { flex: 1; max-width: 480px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+.translate-row { margin: 6px 0 2px; display: flex; align-items: center; gap: 10px; }
