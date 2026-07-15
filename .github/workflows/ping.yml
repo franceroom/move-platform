@@ -1,0 +1,19 @@
+name: Taches planifiees Move
+# Toutes les 30 min : synchro iCal + remboursements caution (+ reveille l'instance Render Free).
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Synchro iCal
+        run: |
+          curl --silent --show-error --output /dev/null --max-time 180 --retry 2 \
+            "https://move-platform.onrender.com/ical/sync?token=${{ secrets.ICAL_SYNC_TOKEN }}"
+      - name: Remboursements caution
+        run: |
+          curl --silent --show-error --output /dev/null --max-time 180 --retry 2 \
+            "https://move-platform.onrender.com/deposit/refund-run?token=${{ secrets.ICAL_SYNC_TOKEN }}"
