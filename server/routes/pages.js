@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { q } = require("../lib/db");
+const legal = require("../lib/legal");
 
 router.get("/", (req, res) => res.render("pages/home"));
 
@@ -32,7 +33,7 @@ router.get("/a-propos", (req, res) => res.render("pages/about", { title: res.loc
 
 // ── Pages légales : contenus fournis par France Room / son conseil (jamais rédigés ici). ──
 for (const slug of ["mentions-legales", "cgu", "confidentialite"]) {
-  router.get("/" + slug, (req, res) => res.render("pages/legal", { title: res.locals.t("legal." + slug), slug }));
+  router.get("/" + slug, (req, res) => res.render("pages/legal", { title: res.locals.t("legal." + slug), slug, contentHtml: legal.html(slug) }));
 }
 
 module.exports = router;
