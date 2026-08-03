@@ -5,6 +5,7 @@ const express = require("express");
 const crypto = require("crypto");
 const router = express.Router();
 const { q } = require("../lib/db");
+const { sessionUser, staffHome } = require("./auth");
 
 const enabled = () => Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 const baseUrl = () => process.env.PUBLIC_BASE_URL || "http://localhost:3001";
@@ -68,9 +69,9 @@ router.get("/auth/google/callback", async (req, res, next) => {
         [email, randomHash, info.given_name || "", info.family_name || "", req.locale || "fr"]);
       user = ins[0];
     }
-    req.session.user = { id: user.id, email: user.email, first_name: user.first_name, role: user.role };
+    req.session.user = sessionUser(user);
     const nxt = req.session.oauthNext; req.session.oauthNext = null;
-    res.redirect(nxt || (user.role === "admin" ? "/admin" : "/compte"));
+    res.redirect(nxt || staffHome(req.session.user));
   } catch (e) { next(e); }
 });
 
