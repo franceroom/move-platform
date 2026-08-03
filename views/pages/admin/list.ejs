@@ -7,7 +7,7 @@
       <form method="post" action="/deconnexion" style="display:inline"><button class="btn btn-ghost">Se déconnecter</button></form>
     </div>
   </div>
-  <nav class="admin-nav"><b>Annonces</b> · <a href="/admin/demandes">Demandes</a> · <a href="/admin/proprietaires">Candidatures proprio</a></nav>
+  <%- include("../../partials/admin-nav") %>
   <div class="admin-search">
     <input type="search" id="annonce-search" placeholder="🔎 Filtrer : titre, ville, catégorie, prix, statut…" autocomplete="off">
     <span id="search-count" class="muted small"></span>

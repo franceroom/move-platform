@@ -1,0 +1,46 @@
+<%- include("../../partials/head", { title: "Planning ménage" }) %>
+<section class="admin-page">
+  <div class="admin-head">
+    <h1>Planning arrivées / départs</h1>
+    <form method="post" action="/deconnexion" style="display:inline"><button class="btn btn-ghost">Se déconnecter</button></form>
+  </div>
+  <%- include("../../partials/admin-nav") %>
+  <p class="muted small">Fenêtre : 7 derniers jours → 60 prochains jours. Le jour de départ = ménage à prévoir. Sources : réservations Move et calendriers importés (Airbnb/Lodgify).</p>
+
+  <h2>🧹 Départs — ménage à prévoir (<%= departures.length %>)</h2>
+  <table class="admin-table">
+    <thead><tr><th>Date</th><th>Logement</th><th>Ville</th><th>Quartier</th><th>Adresse</th><th>Source</th></tr></thead>
+    <tbody>
+      <% for (const d of departures) { %>
+      <tr <%= d.date === today ? 'style="background:#fff8dc"' : "" %>>
+        <td><b><%= d.date %></b><%= d.date === today ? " (aujourd'hui)" : "" %></td>
+        <td><%= d.title %></td>
+        <td><%= d.ville %></td>
+        <td><%= d.quartier %></td>
+        <td><%= d.adresse %></td>
+        <td><span class="pill"><%= d.source === "booking" ? "Move" : "iCal" %></span></td>
+      </tr>
+      <% } %>
+      <% if (!departures.length) { %><tr><td colspan="6" class="muted">Aucun départ sur la période.</td></tr><% } %>
+    </tbody>
+  </table>
+
+  <h2>🔑 Arrivées (<%= arrivals.length %>)</h2>
+  <table class="admin-table">
+    <thead><tr><th>Date</th><th>Logement</th><th>Ville</th><th>Quartier</th><th>Adresse</th><th>Source</th></tr></thead>
+    <tbody>
+      <% for (const a of arrivals) { %>
+      <tr <%= a.date === today ? 'style="background:#fff8dc"' : "" %>>
+        <td><b><%= a.date %></b><%= a.date === today ? " (aujourd'hui)" : "" %></td>
+        <td><%= a.title %></td>
+        <td><%= a.ville %></td>
+        <td><%= a.quartier %></td>
+        <td><%= a.adresse %></td>
+        <td><span class="pill"><%= a.source === "booking" ? "Move" : "iCal" %></span></td>
+      </tr>
+      <% } %>
+      <% if (!arrivals.length) { %><tr><td colspan="6" class="muted">Aucune arrivée sur la période.</td></tr><% } %>
+    </tbody>
+  </table>
+</section>
+<%- include("../../partials/foot") %>

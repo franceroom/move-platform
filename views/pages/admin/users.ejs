@@ -1,0 +1,98 @@
+<%- include("../../partials/head", { title: "Utilisateurs" }) %>
+<section class="admin-page">
+  <div class="admin-head">
+    <h1>Utilisateurs &amp; rôles</h1>
+    <form method="post" action="/deconnexion" style="display:inline"><button class="btn btn-ghost">Se déconnecter</button></form>
+  </div>
+  <%- include("../../partials/admin-nav") %>
+
+  <% if (link) { %>
+  <div class="flash flash-ok">
+    <b>Invitation créée.</b> Envoyez ce lien au collaborateur (valable 7 jours) :
+    <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+      <input type="text" id="invite-link" value="<%= link %>" readonly style="flex:1;font-size:0.85em" onclick="this.select()">
+      <button class="btn btn-small" type="button" onclick="navigator.clipboard.writeText(document.getElementById('invite-link').value);this.textContent='Copié ✓'">Copier</button>
+    </div>
+  </div>
+  <% } %>
+  <% if (ok === "roles") { %><div class="flash flash-ok">Rôles enregistrés.</div><% } %>
+  <% if (ok === "suppr") { %><div class="flash flash-ok">Invitation supprimée.</div><% } %>
+  <% if (err) { %><div class="flash flash-err"><%= err === "compte" ? "Aucun compte avec cet email." : err === "admin" ? "Les rôles d'un administrateur ne se modifient pas ici." : err === "email" ? "Email invalide." : err === "roles" ? "Cochez au moins un rôle." : "Erreur." %></div><% } %>
+
+  <h2>Équipe</h2>
+  <table class="admin-table">
+    <thead><tr><th>Email</th><th>Nom</th><th>Rôles</th><th></th></tr></thead>
+    <tbody>
+      <% for (const u of staff) { %>
+      <tr>
+        <td><%= u.email %></td>
+        <td><%= u.first_name %> <%= u.last_name %></td>
+        <td>
+          <% if (u.role === "admin") { %>
+            <span class="pill pill-published">Administrateur (tous les droits)</span>
+          <% } else { %>
+          <form method="post" action="/admin/utilisateurs/<%= u.id %>/roles" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+            <% for (const r of roles) { %>
+              <label style="display:flex;gap:4px;align-items:center;font-weight:normal">
+                <input type="checkbox" name="roles" value="<%= r %>" <%= String(u.staff_roles || "").split(",").includes(r) ? "checked" : "" %>>
+                <%= roleLabels[r] %>
+              </label>
+            <% } %>
+            <button class="btn btn-small">Enregistrer</button>
+          </form>
+          <% } %>
+        </td>
+        <td></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <% if (invitations.length) { %>
+  <h2>Invitations en attente</h2>
+  <table class="admin-table">
+    <thead><tr><th>Email</th><th>Rôles</th><th>Expire</th><th>Lien</th><th></th></tr></thead>
+    <tbody>
+      <% for (const i of invitations) { %>
+      <tr>
+        <td><%= i.email %></td>
+        <td><%= String(i.roles).split(",").filter(Boolean).map(r => roleLabels[r] || r).join(", ") %></td>
+        <td><%= isoDate(i.expires_at) %></td>
+        <td><input type="text" value="/invitation/<%= i.token %>" readonly style="width:220px;font-size:0.8em" onclick="this.select()"></td>
+        <td><form method="post" action="/admin/utilisateurs/invitations/<%= i.id %>/supprimer"><button class="btn btn-small btn-ghost">Supprimer</button></form></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <% } %>
+
+  <h2>Inviter un collaborateur</h2>
+  <p class="muted small">Un lien d'invitation est généré : envoyez-le vous-même (email, WhatsApp…). Le collaborateur choisit son mot de passe — ou se connecte avec Google si son compte utilise le même email.</p>
+  <form method="post" action="/admin/utilisateurs/inviter" class="admin-form" style="max-width:520px">
+    <label>Email du collaborateur <input type="email" name="email" required></label>
+    <label>Prénom (optionnel) <input type="text" name="first_name"></label>
+    <fieldset style="border:none;padding:0;margin:8px 0">
+      <% for (const r of roles) { %>
+        <label style="display:flex;gap:6px;align-items:center;font-weight:normal">
+          <input type="checkbox" name="roles" value="<%= r %>"> <%= roleLabels[r] %>
+          <span class="muted small"><%= r === "gestionnaire" ? "— crée et publie les annonces, gère les demandes et calendriers" : "— voit le planning des arrivées/départs" %></span>
+        </label>
+      <% } %>
+    </fieldset>
+    <button class="btn btn-primary">Générer le lien d'invitation</button>
+  </form>
+
+  <h2>Donner des rôles à un compte existant</h2>
+  <form method="post" action="/admin/utilisateurs/roles-par-email" class="admin-form" style="max-width:520px">
+    <label>Email du compte <input type="email" name="email" required></label>
+    <fieldset style="border:none;padding:0;margin:8px 0">
+      <% for (const r of roles) { %>
+        <label style="display:flex;gap:6px;align-items:center;font-weight:normal">
+          <input type="checkbox" name="roles" value="<%= r %>"> <%= roleLabels[r] %>
+        </label>
+      <% } %>
+    </fieldset>
+    <button class="btn">Appliquer</button>
+  </form>
+</section>
+<%- include("../../partials/foot") %>

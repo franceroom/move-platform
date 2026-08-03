@@ -1,6 +1,6 @@
 <%- include("../../partials/head", { title: "Demandes" }) %>
 <section class="admin-page">
-  <nav class="admin-nav"><a href="/admin">Annonces</a> · <b>Demandes</b> · <a href="/admin/proprietaires">Candidatures proprio</a></nav>
+  <%- include("../../partials/admin-nav") %>
   <h1>Demandes de réservation</h1>
   <% if (path.indexOf("conflit") !== -1) { %><p class="error">Conflit de dates : la période n'était plus libre, demande refusée automatiquement.</p><% } %>
   <table class="admin-table">
