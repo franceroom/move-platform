@@ -19,8 +19,8 @@ E-mail : <a href="mailto:contact@france-room.fr">contact@france-room.fr</a>. Té
 <h2>Activité réglementée — loi Hoguet</h2>
 <p>
 FRANCE ROOM est titulaire de la carte professionnelle n°&nbsp;<strong>CPI 1301 2018 000 034 274</strong> portant les mentions «&nbsp;Transaction sur immeubles et fonds de commerce&nbsp;» et «&nbsp;Gestion immobilière&nbsp;», délivrée par la Chambre de Commerce et d'Industrie de Marseille-Provence, en application de la loi n°&nbsp;70-9 du 2 janvier 1970 et du décret n°&nbsp;72-678 du 20 juillet 1972.<br>
-Garantie financière de 200&nbsp;000&nbsp;€, souscrite auprès de <strong>[À COMPLÉTER — nom et adresse du garant]</strong>, couvrant notamment les fonds détenus pour le compte de tiers au titre de l'activité de gestion immobilière.<br>
-Assurance responsabilité civile professionnelle : <strong>HISCOX</strong> <strong>[À COMPLÉTER — n° de police et couverture géographique]</strong>.
+Garantie financière de 200&nbsp;000&nbsp;€, couvrant notamment les fonds détenus pour le compte de tiers au titre de l'activité de gestion immobilière. Les références du garant sont communiquées sur demande écrite à <a href="mailto:contact@france-room.fr">contact@france-room.fr</a> et figurent sur les documents contractuels.<br>
+Assurance responsabilité civile professionnelle souscrite auprès de <strong>HISCOX</strong>. Les références de la police sont communiquées sur demande écrite à <a href="mailto:contact@france-room.fr">contact@france-room.fr</a>.
 </p>
 <p>FRANCE ROOM adhère au code de déontologie des professions immobilières (décret n°&nbsp;2015-1090 du 28 août 2015).</p>
 
@@ -32,7 +32,7 @@ Base de données hébergée dans l'Union européenne (région de Francfort, Alle
 
 <h2>Médiation de la consommation</h2>
 <p>
-Conformément aux articles L.&nbsp;612-1 et suivants du Code de la consommation, le consommateur peut recourir gratuitement, après réclamation écrite préalable restée infructueuse, au médiateur de la consommation dont relève FRANCE ROOM : <strong>[À COMPLÉTER — nom, adresse postale et site internet du médiateur]</strong>.<br>
+Conformément aux articles L.&nbsp;612-1 et suivants du Code de la consommation, le consommateur peut recourir gratuitement, après réclamation écrite préalable restée infructueuse, au médiateur de la consommation dont relève FRANCE ROOM. Les coordonnées du médiateur seront publiées sur cette page dès finalisation de l'adhésion en cours.<br>
 Plateforme européenne de règlement en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.
 </p>
 
