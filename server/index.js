@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const cookieSession = require("cookie-session");
 const { i18nMiddleware } = require("./lib/i18n");
+const { hasRole } = require("./routes/auth");
 
 const app = express();
 app.set("trust proxy", 1); // Render est derrière un proxy : requis pour les cookies "secure"
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
   res.locals.isoDate = (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
   res.locals.path = req.path;
   res.locals.user = req.session.user || null;
+  res.locals.hasRole = (r) => hasRole(req.session.user, r);
   res.locals.googleEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
   res.locals.env = process.env.NODE_ENV || "development";
   next();
