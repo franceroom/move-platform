@@ -1,0 +1,20 @@
+<%- include("../partials/head", { title: "Invitation" }) %>
+<section class="auth-page">
+  <% if (!inv) { %>
+    <h1>Invitation invalide</h1>
+    <p>Ce lien d'invitation est invalide, expiré ou déjà utilisé. Rapprochez-vous de l'administrateur Move pour en recevoir un nouveau.</p>
+  <% } else { %>
+    <h1>Rejoindre l'équipe Move</h1>
+    <p>Vous êtes invité·e à rejoindre l'équipe avec le(s) rôle(s) :
+      <b><%= String(inv.roles).split(",").filter(Boolean).map(r => roleLabels[r] || r).join(", ") %></b>.</p>
+    <p class="muted small">Compte : <b><%= inv.email %></b>. Si vous avez déjà un compte Move avec cet email, validez simplement le formulaire : vos rôles seront ajoutés et vous pourrez vous connecter avec votre mot de passe habituel (ou Google).</p>
+    <% if (error) { %><div class="flash flash-err"><%= error %></div><% } %>
+    <form method="post" class="admin-form" style="max-width:420px">
+      <label>Prénom <input type="text" name="first_name" value="<%= form.first_name || "" %>" required></label>
+      <label>Nom <input type="text" name="last_name" value="<%= form.last_name || "" %>" required></label>
+      <label>Mot de passe (8 caractères min.) <input type="password" name="password" minlength="8" required></label>
+      <button class="btn btn-primary">Créer mon accès</button>
+    </form>
+  <% } %>
+</section>
+<%- include("../partials/foot") %>
