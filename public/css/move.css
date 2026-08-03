@@ -173,3 +173,9 @@ main { min-height: 60vh; }
 /* Pages légales */
 .legal-page h2 { font-size: 20px; margin-top: 28px; }
 .legal-page p { line-height: 1.6; }
+
+/* Messages flash (admin utilisateurs / invitation) */
+.flash { padding: 10px 14px; border-radius: 8px; margin: 12px 0; }
+.flash-ok { background: #e8f6ec; border: 1px solid #9ad2a8; }
+.flash-err { background: #fdecea; border: 1px solid #f0a8a0; }
+.auth-page { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
