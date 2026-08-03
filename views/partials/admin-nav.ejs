@@ -1,0 +1,9 @@
+<nav class="admin-nav">
+  <%
+    const items = [];
+    if (hasRole("gestionnaire")) { items.push(["/admin", "Annonces"], ["/admin/demandes", "Demandes"]); }
+    if (hasRole("menage")) { items.push(["/admin/planning", "Planning ménage"]); }
+    if (user && user.role === "admin") { items.push(["/admin/proprietaires", "Candidatures proprio"], ["/admin/utilisateurs", "Utilisateurs"]); }
+  %>
+  <%- items.map(([href, label]) => path === href ? "<b>" + label + "</b>" : '<a href="' + href + '">' + label + "</a>").join(" · ") %>
+</nav>
