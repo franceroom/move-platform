@@ -99,3 +99,17 @@ CREATE TABLE IF NOT EXISTS owner_leads (
 -- Photos téléchargées : stockées en base (le disque Render Free est éphémère).
 ALTER TABLE listing_photos ADD COLUMN IF NOT EXISTS data BYTEA;
 ALTER TABLE listing_photos ADD COLUMN IF NOT EXISTS mime TEXT;
+
+-- Collaborateurs : rôles internes (cases à cocher) + invitations par lien.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS staff_roles TEXT DEFAULT '';
+
+CREATE TABLE IF NOT EXISTS staff_invitations (
+  id         BIGSERIAL PRIMARY KEY,
+  token      TEXT NOT NULL UNIQUE,
+  email      TEXT NOT NULL,
+  first_name TEXT NOT NULL DEFAULT '',
+  roles      TEXT NOT NULL DEFAULT '',
+  used_at    TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
