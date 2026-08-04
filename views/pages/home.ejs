@@ -1,6 +1,6 @@
 <%- include("../partials/head", { title: null }) %>
 
-<section class="hero">
+<section class="hero hero-center">
   <div class="hero-inner">
     <h1><%= t("home.hero.title") %></h1>
     <p><%= t("home.hero.subtitle") %></p>
@@ -14,11 +14,22 @@
     <div class="card">
       <h3><%= t("home.why.tenants.title") %></h3>
       <p><%= t("home.why.tenants.body") %></p>
+      <a class="btn btn-primary card-cta" href="/logements"><%= t("home.why.tenants.cta") %></a>
     </div>
     <div class="card">
       <h3><%= t("home.why.owners.title") %></h3>
       <p><%= t("home.why.owners.body") %></p>
+      <a class="btn btn-primary card-cta" href="/confier-mon-bien"><%= t("home.why.owners.cta") %></a>
     </div>
+  </div>
+</section>
+
+<section class="who">
+  <div class="who-inner">
+    <h2><%= t("home.who.title") %></h2>
+    <p><%= t("home.who.p1") %></p>
+    <p><%= t("home.who.p2") %></p>
+    <a class="btn btn-ghost" href="/a-propos"><%= t("home.who.cta") %></a>
   </div>
 </section>
 
