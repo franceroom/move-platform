@@ -191,3 +191,7 @@ main { min-height: 60vh; }
 .who h2 { font-size: 30px; margin: 0 0 18px; }
 .who p { line-height: 1.7; max-width: 780px; margin: 0 0 14px; }
 .who .btn-ghost { display: inline-block; margin-top: 8px; background: var(--move-white); }
+
+/* Bouton noir/jaune (About) */
+.btn-dark { background: var(--move-black); color: var(--move-yellow); box-shadow: 0 2px 8px rgba(0,0,0,.18); transition: transform .12s ease, box-shadow .12s ease; }
+.btn-dark:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.25); }
