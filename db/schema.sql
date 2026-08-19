@@ -113,3 +113,13 @@ CREATE TABLE IF NOT EXISTS staff_invitations (
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Réinitialisation de mot de passe (lien à usage unique, valable 48 h).
+CREATE TABLE IF NOT EXISTS password_resets (
+  id         BIGSERIAL PRIMARY KEY,
+  token      TEXT NOT NULL UNIQUE,
+  user_id    BIGINT NOT NULL REFERENCES users(id),
+  used_at    TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
