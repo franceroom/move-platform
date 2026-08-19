@@ -1,0 +1,18 @@
+<%- include("../partials/head", { title: t("forgot.title") }) %>
+<section class="content-page narrow">
+  <h1><%= t("forgot.title") %></h1>
+  <% if (sent) { %>
+    <p class="success"><%= t("forgot.sent") %></p>
+    <p class="muted small"><%= t("forgot.sentHint") %></p>
+    <p><a href="/connexion"><u><%= t("nav.login") %></u></a></p>
+  <% } else { %>
+    <p class="muted"><%= t("forgot.intro") %></p>
+    <% if (error) { %><p class="error"><%= error %></p><% } %>
+    <form method="post" action="/mot-de-passe-oublie" class="stack">
+      <label><%= t("login.email") %><input type="email" name="email" required autocomplete="email"></label>
+      <button class="btn btn-primary" type="submit"><%= t("forgot.submit") %></button>
+      <p class="muted small"><a href="/connexion"><u><%= t("nav.login") %></u></a></p>
+    </form>
+  <% } %>
+</section>
+<%- include("../partials/foot") %>

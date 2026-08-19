@@ -2,7 +2,10 @@
 <section class="content-page">
   <div class="admin-head">
     <h1><%= t("account.title") %></h1>
-    <form method="post" action="/deconnexion"><button class="btn btn-ghost"><%= t("nav.logout") %></button></form>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a class="btn btn-ghost" href="/mon-mot-de-passe"><%= t("password.title") %></a>
+      <form method="post" action="/deconnexion"><button class="btn btn-ghost"><%= t("nav.logout") %></button></form>
+    </div>
   </div>
   <% if (flash === "envoyee") { %><p class="success"><%= t("account.flash.sent") %></p><% } %>
   <% if (flash === "ok") { %><p class="success"><%= t("account.flash.paid") %></p><% } %>

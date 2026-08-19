@@ -1,0 +1,18 @@
+<%- include("../partials/head", { title: t("reset.title") }) %>
+<section class="content-page narrow">
+  <h1><%= t("reset.title") %></h1>
+  <% if (!token) { %>
+    <p class="error"><%= t("reset.invalid") %></p>
+    <p><a href="/mot-de-passe-oublie"><u><%= t("forgot.title") %></u></a></p>
+  <% } else { %>
+    <p class="muted"><%= t("reset.intro") %></p>
+    <% if (error) { %><p class="error"><%= error %></p><% } %>
+    <form method="post" action="/nouveau-mot-de-passe/<%= token %>" class="stack">
+      <label><%= t("password.new") %><input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+      <label><%= t("password.confirm") %><input type="password" name="password2" required minlength="8" autocomplete="new-password"></label>
+      <p class="muted small"><%= t("signup.pwHint") %></p>
+      <button class="btn btn-primary" type="submit"><%= t("reset.submit") %></button>
+    </form>
+  <% } %>
+</section>
+<%- include("../partials/foot") %>

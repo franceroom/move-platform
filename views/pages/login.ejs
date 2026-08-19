@@ -13,6 +13,7 @@
     <label><%= t("login.email") %><input type="email" name="email" required autocomplete="email"></label>
     <label><%= t("login.password") %><input type="password" name="password" required autocomplete="current-password"></label>
     <button class="btn btn-primary" type="submit"><%= t("nav.login") %></button>
+    <p class="muted small"><a href="/mot-de-passe-oublie"><u><%= t("login.forgot") %></u></a></p>
     <p class="muted small"><%= t("login.noAccount") %> <a href="/inscription?next=<%= encodeURIComponent(next) %>"><u><%= t("nav.signup") %></u></a></p>
   </form>
 </section>
