@@ -6,7 +6,7 @@ const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024, files: 20 } });
 const router = express.Router();
 const L = require("../lib/listings");
-const { requireAdmin, requireRole, hasRole, STAFF_ROLES, STAFF_ROLE_LABELS } = require("./auth");
+const { requireAdmin, requireRole, hasRole, createResetLink, RESET_HOURS, STAFF_ROLES, STAFF_ROLE_LABELS } = require("./auth");
 const translate = require("../lib/translate");
 const cal = require("../lib/calendar");
 const { isoDate } = require("../lib/calendar");
@@ -169,8 +169,9 @@ router.get("/utilisateurs", requireAdmin, async (req, res, next) => {
     const staff = await q("SELECT id, email, first_name, last_name, role, staff_roles FROM users WHERE role = 'admin' OR staff_roles <> '' ORDER BY id");
     const invitations = await q("SELECT * FROM staff_invitations WHERE used_at IS NULL ORDER BY created_at DESC");
     res.render("pages/admin/users", { title: "Utilisateurs", staff, invitations, isoDate,
-      roles: STAFF_ROLES, roleLabels: STAFF_ROLE_LABELS,
-      link: req.query.link || null, ok: req.query.ok || null, err: req.query.err || null });
+      roles: STAFF_ROLES, roleLabels: STAFF_ROLE_LABELS, resetHours: RESET_HOURS,
+      link: req.query.link || null, pwlink: req.query.pwlink || null,
+      ok: req.query.ok || null, err: req.query.err || null });
   } catch (e) { next(e); }
 });
 
@@ -204,6 +205,37 @@ router.post("/utilisateurs/invitations/:id/supprimer", requireAdmin, async (req,
   try {
     await q("DELETE FROM staff_invitations WHERE id = $1 AND used_at IS NULL", [req.params.id]);
     res.redirect("/admin/utilisateurs?ok=suppr");
+  } catch (e) { next(e); }
+});
+
+// Lien « définir / réinitialiser le mot de passe » d'un collaborateur (aucun email requis :
+// le lien s'affiche à l'écran, l'admin le transmet lui-même).
+router.post("/utilisateurs/:id/mot-de-passe", requireAdmin, async (req, res, next) => {
+  try {
+    const u = (await q("SELECT id, email FROM users WHERE id = $1", [req.params.id]))[0];
+    if (!u) return res.redirect("/admin/utilisateurs?err=introuvable");
+    const link = await createResetLink(u.id);
+    if (req.body.envoyer) {
+      try {
+        await mailer.send({
+          to: u.email,
+          subject: "Move — définir votre mot de passe",
+          text: `Bonjour,\n\nPour définir votre mot de passe Move, ouvrez ce lien (valable ${RESET_HOURS} h, à usage unique) :\n${link}\n\n`
+            + `Ensuite, vous vous connecterez toujours avec votre email et ce mot de passe.\n\nL'équipe Move — France Room`
+        });
+      } catch (e) { console.error("[reset admin] email non envoyé", e && e.message); }
+    }
+    res.redirect("/admin/utilisateurs?pwlink=" + encodeURIComponent(link));
+  } catch (e) { next(e); }
+});
+
+router.post("/utilisateurs/mot-de-passe-par-email", requireAdmin, async (req, res, next) => {
+  try {
+    const email = (req.body.email || "").trim().toLowerCase();
+    const u = (await q("SELECT id FROM users WHERE email = $1", [email]))[0];
+    if (!u) return res.redirect("/admin/utilisateurs?err=compte");
+    const link = await createResetLink(u.id);
+    res.redirect("/admin/utilisateurs?pwlink=" + encodeURIComponent(link));
   } catch (e) { next(e); }
 });
 
