@@ -23,6 +23,16 @@ app.use(cookieSession({
   httpOnly: true
 }));
 
+// Session glissante : on « touche » la session une fois par jour d'utilisation pour que le
+// cookie de 30 jours soit renouvelé — un utilisateur régulier reste connecté sans limite.
+app.use((req, res, next) => {
+  if (req.session && req.session.user) {
+    const day = Math.floor(Date.now() / 86400000);
+    if (req.session.day !== day) req.session.day = day;
+  }
+  next();
+});
+
 app.use(i18nMiddleware);
 
 app.use((req, res, next) => {
