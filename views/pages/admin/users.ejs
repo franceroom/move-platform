@@ -15,13 +15,23 @@
     </div>
   </div>
   <% } %>
+  <% if (pwlink) { %>
+  <div class="flash flash-ok">
+    <b>Lien de mot de passe créé.</b> Transmettez-le à la personne concernée (valable <%= resetHours %> h, à usage unique).
+    Elle choisit son mot de passe, puis se connecte <b>toujours</b> avec son email + ce mot de passe.
+    <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+      <input type="text" id="pw-link" value="<%= pwlink %>" readonly style="flex:1;font-size:0.85em" onclick="this.select()">
+      <button class="btn btn-small" type="button" onclick="navigator.clipboard.writeText(document.getElementById('pw-link').value);this.textContent='Copié ✓'">Copier</button>
+    </div>
+  </div>
+  <% } %>
   <% if (ok === "roles") { %><div class="flash flash-ok">Rôles enregistrés.</div><% } %>
   <% if (ok === "suppr") { %><div class="flash flash-ok">Invitation supprimée.</div><% } %>
   <% if (err) { %><div class="flash flash-err"><%= err === "compte" ? "Aucun compte avec cet email." : err === "admin" ? "Les rôles d'un administrateur ne se modifient pas ici." : err === "email" ? "Email invalide." : err === "roles" ? "Cochez au moins un rôle." : "Erreur." %></div><% } %>
 
   <h2>Équipe</h2>
   <table class="admin-table">
-    <thead><tr><th>Email</th><th>Nom</th><th>Rôles</th><th></th></tr></thead>
+    <thead><tr><th>Email</th><th>Nom</th><th>Rôles</th><th>Mot de passe</th></tr></thead>
     <tbody>
       <% for (const u of staff) { %>
       <tr>
@@ -42,11 +52,21 @@
           </form>
           <% } %>
         </td>
-        <td></td>
+        <td>
+          <form method="post" action="/admin/utilisateurs/<%= u.id %>/mot-de-passe" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-small btn-ghost" title="Génère un lien à usage unique pour définir son mot de passe">Générer un lien</button>
+            <label style="display:flex;gap:4px;align-items:center;font-weight:normal" class="muted small">
+              <input type="checkbox" name="envoyer" value="1"> l'envoyer par email
+            </label>
+          </form>
+        </td>
       </tr>
       <% } %>
     </tbody>
   </table>
+  <p class="muted small">Le lien de mot de passe permet à un collaborateur de (re)définir son mot de passe :
+    ensuite il se connecte avec son email et son mot de passe, sans nouveau lien. Il peut aussi le faire seul via
+    « Mot de passe oublié ? » sur la page de connexion.</p>
 
   <% if (invitations.length) { %>
   <h2>Invitations en attente</h2>
@@ -80,6 +100,13 @@
       <% } %>
     </fieldset>
     <button class="btn btn-primary">Générer le lien d'invitation</button>
+  </form>
+
+  <h2>Lien de mot de passe pour un compte existant</h2>
+  <p class="muted small">Pour un locataire ou un collaborateur qui n'apparaît pas ci-dessus.</p>
+  <form method="post" action="/admin/utilisateurs/mot-de-passe-par-email" class="admin-form" style="max-width:520px">
+    <label>Email du compte <input type="email" name="email" required></label>
+    <button class="btn">Générer le lien</button>
   </form>
 
   <h2>Donner des rôles à un compte existant</h2>
